@@ -1,47 +1,49 @@
 <!DOCTYPE html>
-<html>
-<title>Multiply!</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<link href="style.css" rel="stylesheet">
-<body onkeypress="onKeyPress(event)" onresize="onResize()">
-  <div id="main">
-    <div id="mode-bar">
-      <button id="prev-mode-button" class="icon-button" onclick="prevMode()">
-        <span class="fa fa-angle-left"></span>
-      </button>
-      <div class="hide-overflow">
-          <div id="mode-header-container">
-              <h2>Multiply</h2>
-              <h2>Divide</h2>
-              <h2>Add</h2>
-              <h2>Subtract</h2>  
-          </div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiply!</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="main">
+      <div id="mode-bar">
+        <button id="prev-mode-button" class="icon-button" onclick="prevMode()" title="Previous mode">
+          <span class="fa fa-angle-left"></span>
+        </button>
+        <div class="hide-overflow">
+            <div id="mode-header-container">
+                <h2>Multiply</h2>
+                <h2>Divide</h2>
+                <h2>Add</h2>
+                <h2>Subtract</h2>  
+            </div>
+        </div>
+        <button id="next-mode-button" class="icon-button" onclick="nextMode()" title="Next mode">
+          <span class="fa fa-angle-right"></span>
+        </button>
       </div>
-      <button id="next-mode-button" class="icon-button" onclick="nextMode()">
-        <span class="fa fa-angle-right"></span>
-      </button>
+      <div id="question-container">
+        <p id="question">
+          <span class="operand"></span>
+          <span class="operator"></span>
+          <span class="operand"></span>
+        </p>
+        <p id="prev-question"></p>
+      </div>
+      <form name="answerForm" onsubmit="checkAnswer(); return false">
+        <input id="answer" type="number" name="answer" placeholder="Answer" autofocus>
+        <button type="submit">Check</button>
+      </form>
     </div>
-    <div id="question-container">
-      <p id="question">
-        <span class="operand"></span>
-        <span class="operator"></span>
-        <span class="operand"></span>
-      </p>
-      <p id="prev-question">test</p>
-    </div>
-    <form name="answerForm" onsubmit="checkAnswer(); return false">
-      <input id="answer" type="number" name="answer" placeholder="Answer" autofocus>
-      <button type="submit">Check</button>
-    </form>
-  </div>
-  <!--<button id="settings-button" class="icon-button">
-    <span class="fa fa-cog"></span>
-  </button>-->
-  <footer>Copyright © 2021 Caleb Chalmers | <a href="https://github.com/CalebChalmers">Github <span class="fab fa-github"></span><a></footer>
-  <script src="anime.min.js"></script>
-  <script src="script.js"></script>
-</body>
+    <!--<button id="settings-button" class="icon-button">
+      <span class="fa fa-cog"></span>
+    </button>-->
+    <footer>Copyright © 2021 Caleb Chalmers | <a href="https://github.com/CalebChalmers">Github <span class="fab fa-github"></span><a></footer>
+    <script src="anime.min.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
