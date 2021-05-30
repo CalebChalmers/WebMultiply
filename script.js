@@ -1,77 +1,86 @@
 const defaultMode = 0;
 const modes = [
-  new Mode("Multiply", "×", 
-    () => [random(1, 12), random(1, 12)], 
-    (a,b,c) => a * b == c),
-  new Mode("Divide", "÷", 
-    function() {
-      var a = random(1, 12);
-      return [a * random(1, 12), a];
-    }, 
-    (a,b,c) => a / b == c),
-  new Mode("Add", "+", 
-    () => [random(1, 100), random(1, 100)], 
-    (a,b,c) => a + b == c),
-  new Mode("Subtract", "−",
-    () => [random(1, 100), random(1, 100)], 
-    (a,b,c) => a - b == c),
+  {
+    name: "Multiply", symbol: "×",
+    generate: () => {
+      let a = random(1, 12);
+      let b = random(1, 12);
+      return [a, b, a * b]
+    }
+  },
+  {
+    name: "Divide", symbol: "÷",
+    generate: () => {
+      let a = random(1, 12);
+      let b = random(1, 12);
+      return [a * b, a, b];
+    }
+  },
+  {
+    name: "Add", symbol: "+",
+    generate: () => {
+      let a = random(1, 100);
+      let b = random(1, 100);
+      return [a, b, a + b]
+    }
+  },
+  {
+    name: "Subtract", symbol: "−",
+    generate: () => {
+      let a = random(1, 100);
+      let b = random(1, 100);
+      return [a, b, a - b]
+    }
+  }
 ]
 
-var random = anime.random;
-var op1, op2;
-var modeIndex = -1;
-var modeAnimation, nextQuestionAnimation, correctAnimation, incorrectAnimation; // animations
-
-function Mode(name, operator, getOperands, check) {
-  this.name = name;
-  this.operator = operator;
-  this.getOperands = getOperands;
-  this.check = check;
+function random(min, max) // [min, max]
+{
+  return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-function setMode(index) {
-  if(typeof index !== "number") {
-    console.error("index is not a number!");
-    return;
-  }
-  
-  index = Math.max(Math.min(index, modes.length - 1), 0);
-  if(index === modeIndex) return; // not changed
-  
-  modeIndex = index;
+function getModeIndex() {
+  let url = new URL(document.location);
+  let modeIndex = parseInt(url.searchParams.get("mode"));
+  return isNaN(modeIndex) ? defaultMode : modeIndex;
+}
+
+function setModeIndex(index) {
+  let newIndex = Math.min(Math.max(index, 0), modes.length - 1);
   
   // change browser url
-  var url = new URL(document.location);
-  url.searchParams.set("mode", modeIndex);
+  let url = new URL(document.location);
+  url.searchParams.set("mode", newIndex);
   history.replaceState(null, "", url.href);
   
-  document.getElementById("prev-mode-button").disabled = (modeIndex <= 0);
-  document.getElementById("next-mode-button").disabled = (modeIndex >= modes.length - 1);
+  document.getElementById("prev-mode-button").disabled = (newIndex <= 0);
+  document.getElementById("next-mode-button").disabled = (newIndex >= modes.length - 1);
   
   nextQuestion();
   playModeAnimation();
 }
 
-function nextMode() { setMode(modeIndex + 1); };
-function prevMode() { setMode(modeIndex - 1); };
-function getMode() { return modes[modeIndex]; }
+function nextMode() { setModeIndex(getModeIndex() + 1); }
+function prevMode() { setModeIndex(getModeIndex() - 1); }
 
 function nextQuestion() {
-  var mode = getMode();
-  [op1, op2] = mode.getOperands();
-  var questionElement = document.getElementById("question");
+  let mode = modes[getModeIndex()];
+  let [operatorA, operatorB, answer] = mode.generate();
+  window.answer = answer;
+  
+  let questionElement = document.getElementById("question");
   document.getElementById("prev-question").innerHTML = questionElement.innerHTML;
-  questionElement.children[0].innerHTML = op1;
-  questionElement.children[1].innerHTML = mode.operator;
-  questionElement.children[2].innerHTML = op2;
+  questionElement.children[0].textContent = operatorA;
+  questionElement.children[1].textContent = mode.symbol;
+  questionElement.children[2].textContent = operatorB;
+
+  playNextQuestionAnimation();
   document.getElementById("answer").focus();
-  nextQuestionAnimation.seek(0);
-  nextQuestionAnimation.restart();
 }
 
 function checkAnswer() {
-  var input = document.getElementById("answer");
-  if(getMode().check(op1, op2, input.value)) {
+  let input = document.getElementById("answer");
+  if(input.value == window.answer) {
     input.value = "";
     nextQuestion();
     playCorrectAnimation();
@@ -81,29 +90,26 @@ function checkAnswer() {
   input.select();
 }
 
-var prevModeAnimation = null;
 function playModeAnimation() {
-  prevModeAnimation?.pause();
-
-  var el = document.getElementById("mode-header-container");
-  prevModeAnimation = anime({
-    targets: el,
+  anime({
+    targets: document.getElementById("mode-header-container"),
     duration: 450,
-    left: [el.style.left, (-modeIndex * 100) + "%"],
+    left: (-getModeIndex() * 100) + "%",
     easing: "easeOutQuint"
   });
 };
 
-nextQuestionAnimation = anime({
-  autoplay: false,
-  targets: "#question-container > p",
-  duration: 450,  
-  translateY: ["-100%", "0%"],
-  scale: {
-    value: (_, i) => (i === 0 ? [0.85, 1.0] : [1.0, 0.85])
-  },
-  easing: "easeOutQuint"
-});
+function playNextQuestionAnimation() {
+  let targets = "#question-container > p";
+  anime.remove(targets);
+  anime({
+    targets: targets,
+    duration: 450,
+    translateY: ["-100%", "0%"],
+    scale: (_el, i, _t) => (i === 0 ? [0.85, 1.0] : [1.0, 0.85]),
+    easing: "easeOutQuint"
+  });
+}
 
 function playCorrectAnimation() {
   anime({
@@ -122,12 +128,10 @@ function playIncorrectAnimation() {
     easing: "linear"
   }).add({
     targets: "#question",
-    offset: 0,
     duration: 220,
     translateX: ["0em", "-0.1em", "0.1em", "0em"],
     easing: "easeInOutSine",
-  });
+  }, 0);
 }
 
-// set initial mode from URL, if provided
-setMode(parseInt(new URL(document.location).searchParams.get("mode")) ?? defaultMode);
+setModeIndex(getModeIndex()); // initialize from URL
