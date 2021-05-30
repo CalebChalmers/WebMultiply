@@ -53,6 +53,7 @@ function setModeIndex(index) {
   url.searchParams.set("mode", newIndex);
   history.replaceState(null, "", url.href);
   
+  document.title = modes[newIndex].name + "!";
   document.getElementById("prev-mode-button").disabled = (newIndex <= 0);
   document.getElementById("next-mode-button").disabled = (newIndex >= modes.length - 1);
   
