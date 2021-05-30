@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js"></script>
   </head>
   <body>
     <div id="main">
       <div id="mode-bar">
-        <button id="prev-mode-button" class="icon-button" onclick="prevMode()" title="Previous mode">
+        <button id="prev-mode-button" class="icon-button" title="Previous mode">
           <span class="fa fa-angle-left"></span>
         </button>
         <div class="hide-overflow">
@@ -23,7 +24,7 @@
             <h2>Subtract</h2>  
           </div>
         </div>
-        <button id="next-mode-button" class="icon-button" onclick="nextMode()" title="Next mode">
+        <button id="next-mode-button" class="icon-button" title="Next mode">
           <span class="fa fa-angle-right"></span>
         </button>
       </div>
@@ -35,8 +36,8 @@
         </p>
         <p id="prev-question"></p>
       </div>
-      <form name="answerForm" onsubmit="checkAnswer(); return false">
-        <input id="answer" type="number" name="answer" placeholder="Answer" autofocus>
+      <form id="answer-form">
+        <input id="answer" type="number" placeholder="Answer" autofocus>
         <button type="submit">Check</button>
       </form>
     </div>
@@ -44,6 +45,5 @@
       <span class="fa fa-cog"></span>
     </button>-->
     <footer>Copyright © 2021 Caleb Chalmers | <a href="https://github.com/CalebChalmers">Github <span class="fab fa-github"></span><a></footer>
-    <script src="script.js"></script>
   </body>
 </html>

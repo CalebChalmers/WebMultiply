@@ -61,9 +61,6 @@ function setModeIndex(index) {
   playModeAnimation();
 }
 
-function nextMode() { setModeIndex(getModeIndex() + 1); }
-function prevMode() { setModeIndex(getModeIndex() - 1); }
-
 function nextQuestion() {
   let mode = modes[getModeIndex()];
   let [operatorA, operatorB, answer] = mode.generate();
@@ -135,4 +132,17 @@ function playIncorrectAnimation() {
   }, 0);
 }
 
-setModeIndex(getModeIndex()); // initialize from URL
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("prev-mode-button").addEventListener("click", () => {
+    setModeIndex(getModeIndex() - 1);
+  });
+  document.getElementById("next-mode-button").addEventListener("click", () => {
+    setModeIndex(getModeIndex() + 1);
+  });
+  document.getElementById("answer-form").addEventListener("submit", event => {
+    checkAnswer();
+    event.preventDefault();
+  });
+  
+  setModeIndex(getModeIndex()); // initialize mode from URL
+});
